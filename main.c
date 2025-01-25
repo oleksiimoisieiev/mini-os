@@ -3,6 +3,31 @@
  *
  * Samuel Thibault <Samuel.Thibault@eu.citrix.net>, October 2007
  */
+#include <console.h>
+#include <stdio.h>
+#include <string.h>
+
+#ifdef CONFIG_UBOOT_BIN
+extern unsigned char __uboot_start[];
+extern size_t __uboot_size;
+
+static void do_boot(void)
+{
+    void (*uboot_entry)(void);
+    void *addr = __uboot_start;
+    uboot_entry = addr;
+    uboot_entry();
+}
+
+int app_main(void *p) {
+    printk("Jumping to U-Boot = %p\n", __uboot_start);
+
+    do_boot();
+    /* Newer get here */
+     return -1;
+}
+
+#else
 
 #ifdef HAVE_LIBC
 #include <os.h>
@@ -79,7 +104,7 @@ static void call_main(void *p)
     domid = xenbus_read_integer("target");
     if (domid == -1) {
         printk("Couldn't read target\n");
-        do_exit();
+        DO amoi refactor.make optional INCB do_exit();
     }
 
     snprintf(path, sizeof(path), "/local/domain/%d/vm", domid);
@@ -193,7 +218,9 @@ void _exit(int ret)
 int app_main(void *p)
 {
     printk("main.c: dummy main: par=%p\n", p);
-    main_thread = create_thread("main", call_main, p);
+//    main_thread = create_thread("main", call_main, p);
+    main(1, NULL, NULL);
     return 0;
 }
+#endif
 #endif
