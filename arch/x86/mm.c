@@ -312,6 +312,8 @@ static void build_pagetable(unsigned long *start_pfn, unsigned long *max_pfn)
  * Mark portion of the address space read only.
  */
 extern struct shared_info shared_info;
+
+#ifndef CONFIG_UBOOT_BIN
 static void set_readonly(void *text, void *etext)
 {
     unsigned long start_address =
@@ -400,6 +402,8 @@ static void set_readonly(void *text, void *etext)
     write_cr3((unsigned long)pt_base);
 #endif
 }
+
+#endif
 
 /*
  * get the PTE for virtual address va if it exists. Otherwise NULL.
@@ -821,8 +825,9 @@ void arch_init_mm(unsigned long* start_pfn_p, unsigned long* max_pfn_p)
 
     build_pagetable(&start_pfn, &max_pfn);
     clear_bootstrap();
+#ifndef CONFIG_UBOOT_BIN
     set_readonly(&_text, &_erodata);
-
+#endif
     *start_pfn_p = start_pfn;
     *max_pfn_p = max_pfn;
 
