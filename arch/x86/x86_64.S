@@ -403,3 +403,7 @@ page_table_base:
         PTE(page_table_virt_l3 + L4_PROT)
         .align __PAGE_SIZE, 0
 #endif
+
+#ifdef CONFIG_UBOOT_BIN
+#include "addbin.S"
+#endif

@@ -27,4 +27,8 @@ ARCH_LDFLAGS_FINAL := --oformat=elf32-i386
 ARCH_AS_DEPS += x86_hvm.S
 endif
 
+ifeq ($(CONFIG_UBOOT_BIN),y)
+ARCH_AS_DEPS += addbin.S
+endif
+
 ARCH_LDFLAGS_FINAL += -m elf_i386
